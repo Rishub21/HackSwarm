@@ -10,7 +10,7 @@ BASEURL = 'https://api.github.com'; // this is for creation of repo
 //BASEURL2 =  'https://api.github.com/repos/' // this is for adding of file to rep0
 
 let exampleData = {
-  name: 'facetestbook',
+  name: 'facetestbook25',
   description: 'This is your repository',
   homepage: 'https://github.com',
   private: false,
@@ -22,7 +22,7 @@ let exampleData = {
 
 
 let exampleData2 = {
-  githubRepoName: 'facetestbook',
+  githubRepoName: 'facetestbook25',
   githubFileName: 'index.html',
   message: 'A simple commit message',
   committer: {
@@ -56,14 +56,19 @@ export class Github extends React.Component {
       <Button
         onPress = {() =>
           {
-          //alert(JSON.stringify(this.state.myKey));
-          //this.getRepos("kvn219");
-        //  oneFunction(data1, data2)
-          //this.createRepo("Rishub21", "vishnu21", exampleData);
-          this.addFile("Rishub21", "vishnu21", exampleData2);
-}
+            this.createRepo(this.state.myKey, "vishnu21", exampleData)
       }
-      title={'github'}
+    }
+      title={'push to github'}
+      />
+      <Button
+        onPress = {() =>
+          {
+            this.addFile(this.state.myKey, "vishnu21", exampleData2)
+
+      }
+    }
+      title={'add file'}
       />
       <Text>
 {JSON.stringify(this.state.error)}
@@ -71,7 +76,6 @@ export class Github extends React.Component {
     </View>
     )
   }
-
 
 
 getRepos(username) {
@@ -126,16 +130,6 @@ createRepo(username, password, data) {
       this.setState({error:error.response.data});
       alert(url);
       console.log(url)
-      // if (error.response) {
-      //   console.log(error.response.data);
-      //   console.log(error.response.status);
-      //   console.log(error.response.headers);
-      // } else if (error.request) {
-      //   console.log(error.request);
-      // } else {
-      //   console.log('Error', error.message);
-      // }
-      // console.log(error.config);
     });
 };
 
@@ -164,7 +158,9 @@ addFile(username, password, data) {
     .then(res => {
       console.log(res.status);
     })
-    .catch(function(error) {
+    .catch((error) => {
+      this.setState({error:error.response.data});
+      alert(url);
       if (error.response) {
         console.log(error.response.data);
         console.log(error.response.status);
