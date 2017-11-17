@@ -9,6 +9,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Alert,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
@@ -27,7 +28,7 @@ export default class KeyboardScreen extends React.Component {
 	header: null,
     };
 
-    render() {	
+    render() {
 	return (
 	    <View style={styles.container}>
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>

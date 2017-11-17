@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Button, Dimensions, StyleSheet, Text, View , Alert} from 'react-native';
 import {TypeButton} from './TypeButton';
 
 let stringer = "";
@@ -16,11 +16,13 @@ export class Keyboard extends React.Component {
 	};
     }
 
-    _onPress = () => {
-	this.setState(this.state);
+    _onPress = (newLetter) => {
+      data.string = data.string + newLetter;
+
+	     this.setState(this.state);
     }
 
-    
+
     render() {
 	var numerals = ["1","2","3","4","5","6","7","8","9","0"];
 
@@ -180,6 +182,8 @@ export class Keyboard extends React.Component {
 
 
       {element}
+      <Text> {data.string} </Text>
+
       <Button
         onPress = {() => {
             currentBool = this.state.IsCaps;
@@ -191,7 +195,6 @@ export class Keyboard extends React.Component {
 
 
 
-      <Text> {data.string} </Text>
 
     </View>
     );
