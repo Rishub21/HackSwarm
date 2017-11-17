@@ -12,13 +12,14 @@ import {
 import { WebBrowser } from 'expo';
 import BluetoothCP from 'react-native-bluetooth-cross-platform';
 import { MonoText } from '../components/StyledText';
+import { Github } from '../components/Github';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
-  userId = "1234567";
+  userId = "Not connected";
 
   render() {
     return (
@@ -102,6 +103,8 @@ export default class HomeScreen extends React.Component {
             }}
             title={"Send Message"}
           />
+
+          <Github/>
 
         </ScrollView>
       </View>

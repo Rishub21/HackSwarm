@@ -1,52 +1,188 @@
 import React from 'react';
 import {
-    AsyncStorage,
-    Button,
-    Image,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Button,
 } from 'react-native';
 import { WebBrowser } from 'expo';
-
+import BluetoothCP from 'react-native-bluetooth-cross-platform';
 import { MonoText } from '../components/StyledText';
-import {Github} from '../components/Github';
-
-import * as Rx from "rxjs/Rx";
+import { Github } from '../components/Github';
 
 export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
 
-    static navigationOptions = {
-	header: null,
-    };
+  serverId = "Not connected";
+  clientId = "Not connected";
 
-    componentDidMount(){
+  render() {
+    return (
+
+      <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <Button
+            onPress={() => { 
+              BluetoothCP.advertise('WIFI-BT'); 
+              alert("broadcasting");
+
+              BluetoothCP.addInviteListener(function(user) {
+                // alert("Invited!");
+                BluetoothCP.acceptInvitation(user.id);
+                // alert("accepted");
+                // alert(user.id);
+                console.log("Server invited by client: ", user.id);
+                // console.log("accepted");
+                this.clientId = user.id;
+              }.bind(this));
+
+              BluetoothCP.addConnectedListener(function(user) {
+                console.log(user.id);
+                BluetoothCP.sendMessage(this.clientId, user.id);
+                console.log('message sent');
+              });
+
+              BluetoothCP.addReceivedMessageListener(function(user) {
+                //Parsing message
+                console.log(user.message);
+                alert(user.message);
+                this.serverId = user.message;
+              })
+
+            }}
+            title={"Broadcast server"}
+          />
+
+          <Button
+            onPress={() => {
+              alert(this.serverId);
+              BluetoothCP.sendMessage(this.serverId, this.clientId);
+            }}
+            title={"Send Message"}
+          />
+
+          <View style={styles.welcomeContainer}>
+            <Image
+              source={                                                             
+                __DEV__
+                  ? require('../assets/images/robot-dev.png')
+                  : require('../assets/images/robot-prod.png')
+              }
+              style={styles.welcomeImage}
+            />
+          </View>
+
+          <Button
+            onPress={() => { 
+              console.log("pressed");
+              alert("Searching");
+              BluetoothCP.browse();
+              BluetoothCP.addPeerDetectedListener(function(user) {
+                // console.log("addPeerDetectedListener");
+                BluetoothCP.inviteUser(user.id);
+                console.log("Client inviting server: ", user.id);
+                this.serverId = user.id;
+              }.bind(this));
+
+              BluetoothCP.addConnectedListener(function(user) {
+                console.log("Server connected: ", user.id);
+                BluetoothCP.sendMessage(this.clientId, user.id);
+                console.log('message sent');
+              });
+
+              console.log(this.serverId);
+
+              BluetoothCP.addPeerLostListener(function(user) {
+                console.log(`Lost a peer: ${user.id}`);
+                BluetoothCP.disconnectFromPeer(user.id);
+              });
+
+              BluetoothCP.addInviteListener(function(user) {
+                BluetoothCP.acceptInvitation(user.id);
+              });
+
+              BluetoothCP.addReceivedMessageListener(function(user) {
+                //Parsing message
+                console.log(user.message);
+              });
+            }}
+            title={"Connect to Server"}
+          />
+
+          <Button
+            onPress={() => {
+              alert(this.clientId);
+              BluetoothCP.sendMessage(this.clientId, this.serverId);
+            }}
+            title={"Send Message"}
+          />
+
+          <Github/>
+
+        </ScrollView>
+      </View>
+    );
+  }
+
+/*
+  _attachListeners() {
+    this.listener1 = BluetoothCP.addPeerDetectedListener(this._callback);
+    this.listener2 = BluetoothCP.addPeerLostListener(this._callback);
+    this.listener3 = BluetoothCP.addReceivedMessageListener(this._callback);
+    this.listener4 = BluetoothCP.addInviteListener(this._callback);
+    this.listener5 = BluetoothCP.addConnectedListener(this._callback);
+  }
+
+  detachListeners() {
+      this.listener1.remove();
+      this.listener2.remove();
+      this.listener3.remove();
+      this.listener4.remove();
+      this.listener5.remove();
+  }
+*/
+  _maybeRenderDevelopmentModeWarning() {
+    if (__DEV__) {
+      const learnMoreButton = (
+        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
+          Learn more
+        </Text>
+      );
+
+      return (
+        <Text style={styles.developmentModeText}>
+          Development mode is enabled, your app will be slower but you can use useful development
+          tools. {learnMoreButton}
+        </Text>
+      );
+    } else {
+      return (
+        <Text style={styles.developmentModeText}>
+          You are not in development mode, your app will run at full speed.
+        </Text>
+      );
     }
+  }
 
-    render() {
+  _handleLearnMorePress = () => {
+    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
+  };
 
-
-	return (
-	    <View style={styles.container}>
-		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-		    <Github/>
-		</ScrollView>
-	    </View>
-	);
-    }
+  _handleHelpPress = () => {
+    WebBrowser.openBrowserAsync(
+      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
+    );
+  };
 }
 
 const styles = StyleSheet.create({
-    lineNumber: {
-	color: 'red'
-    },
-    currentLine: {
-	backgroundColor: "blue"
-    },
-      container: {
+  container: {
     flex: 1,
     backgroundColor: '#fff',
   },
@@ -131,5 +267,5 @@ const styles = StyleSheet.create({
   helpLinkText: {
     fontSize: 14,
     color: '#2e78b7',
-  }
+  },
 });

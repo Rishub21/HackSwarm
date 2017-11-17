@@ -14,18 +14,22 @@ import SettingsScreen from '../screens/SettingsScreen';
 
 export default TabNavigator(
     {
-	Keyboard: {
-	    screen: KeyboardScreen,
-	},
-	Code: {
-	    screen: CodeScreen,
-	},
-	Output: {
-	    screen: OutputScreen,
-	},
-	Settings: {
-	    screen: SettingsScreen,
-	},
+    	Home: {
+		    screen: HomeScreen,
+		},
+		Keyboard: {
+		    screen: KeyboardScreen,
+		},
+		Code: {
+		    screen: CodeScreen,
+		},
+		Output: {
+		    screen: OutputScreen,
+		},
+		Settings: {
+		    screen: SettingsScreen,
+		},
+
     },
     {
 	navigationOptions: ({ navigation }) => ({
@@ -33,6 +37,12 @@ export default TabNavigator(
 		const { routeName } = navigation.state;
 		let iconName;
 		switch (routeName) {
+			case 'Home':
+			iconName =
+			    Platform.OS === 'ios'
+			    ? `ios-grid${focused ? '' : '-outline'}`
+			    : 'md-grid';
+			break;
 		    case 'Keyboard':
 			iconName =
 			    Platform.OS === 'ios'
@@ -46,6 +56,12 @@ export default TabNavigator(
 			    : 'md-menu';
 			break;
 		    case 'Output':
+			iconName =
+			    Platform.OS === 'ios'
+			    ? `ios-phone-portrait${focused ? '' : '-outline'}`
+			    : 'md-phone-portrait';
+			break;
+			case 'Settings':
 			iconName =
 			    Platform.OS === 'ios'
 			    ? `ios-phone-portrait${focused ? '' : '-outline'}`
