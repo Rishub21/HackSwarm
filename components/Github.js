@@ -10,175 +10,245 @@ BASEURL = 'https://api.github.com'; // this is for creation of repo
 //BASEURL2 =  'https://api.github.com/repos/' // this is for adding of file to rep0
 
 let exampleData = {
-  name: 'facetestbook25',
-  description: 'This is your repository',
-  homepage: 'https://github.com',
-  private: false,
-  has_issues: true,
-  has_projects: true,
-  has_wiki: true,
-  auto_init: true,
+    name: 'facetestbook25',
 };
 
 
 let exampleData2 = {
-  githubRepoName: 'facetestbook25',
-  githubFileName: 'index.html',
-  message: 'A simple commit message',
-  committer: {
-    name: 'Some Cool guy',
-    email: 'winning@nyu.edu',
-  },
-  content: base64.encode('#hello world!\n<h2>Testing 123</h2>\t<p>you are flat!</p>'),
 };
 
 
 
 export class Github extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      NewBoard: '',
-      FinalBoard : 'not ready',
+    constructor(props) {
+	super(props);
+	this.state = {
+	    NewBoard: '',
+	    FinalBoard : 'not ready',
+	    data: {
+		description: 'This is your repository',
+		homepage: 'https://github.com',
+		private: false,
+		has_issues: true,
+		has_projects: true,
+		has_wiki: true,
+		auto_init: true,
+	    },
+	    fileData:{
+		githubFileName: 'index.html',
+		message: 'A simple commit message',
+		committer: {
+		    name: 'Some Cool guy',
+		    email: 'winning@nyu.edu',
+		}
+	    }
+	};
+    }
+
+    render(){
+	return(
+	    <View>
+		<Text>
+		    Repo Name
+		</Text>
+		<TextInput
+		    style={{height: 40}}
+		    placeholder="Type an awesome name"
+		    onChangeText={(text) =>
+			this.saveData(text)}
+		/>
+		<Button
+		    onPress = {() =>
+			{
+			    if(this.state.repoProcessing){
+				//alert("don't double press");
+			    }else{
+				this.setState({
+				    repoProcessing: true
+				});
+				var data = this.state.data;
+				data.name = this.state.myKey;
+				this.createRepo("Rishub21", "vishnu21", this.state.data);
+			    }
+			}
+		    }
+		    title={'Create Github Repo'}
+		/>
+		<Button
+		    onPress = {() =>
+			{
+			    if(this.state.processingFiles){
+				//alert("don't double press");
+			    }else{
+				this.setState({
+				    processingFiles: true
+				});
+				var data = this.state.fileData;
+				data.githubRepoName = this.state.myKey;
+				this.pushFiles("Rishub21", "vishnu21", data)
+			    }
+
+			}
+		    }
+		    title={'Push files'}
+		/>
+
+	    </View>
+	)
+    }
+
+    createRepo(username, password, data) {
+	let url = BASEURL + '/user/repos';
+	const token = `${username}:${password}`;
+	const hash = base64.encode(token);
+	const basicAuth = 'Basic ' + hash;
+	let configs = {
+	    'Access-Control-Allow-Origin': '*',
+	    headers: {
+		Authorization: basicAuth,
+	    },
+	};
+	axios
+	    .post(url, data, configs)
+	    .then(res => {
+		this.setState({
+		    repoProcessing: false
+		});
+		Alert.alert("Created repo " + this.state.myKey);
+	    })
+	    .catch((error) => {
+		this.setState({
+		    repoProcessing: false
+		});
+		Alert.alert("Error: " + error.response.data.errors[0].message);
+	    });
     };
-  }
 
-  render(){
-    return(
-    <View>
-    <TextInput
-          style={{height: 40}}
-          placeholder="Type Username"
-          onChangeText={(text) =>
-            this.saveData(text)}
-        />
-      <Button
-        onPress = {() =>
-          {
-            this.createRepo(this.state.myKey, "vishnu21", exampleData)
-      }
+    pushFiles(username, password, data){
+	let url =
+	    BASEURL +
+	    '/repos/' +
+	    username +
+	    '/' +
+	    data.githubRepoName +
+	    '/contents/';
+	const token = `${username}:${password}`;
+	const hash = base64.encode(token);
+	const basicAuth = 'Basic ' + hash;
+	let configs = {
+	    'Access-Control-Allow-Origin': '*',
+	    headers: {
+		Authorization: basicAuth,
+	    },
+	};
+	axios
+	    .get(url, data, configs)
+	    .then(res => {
+		this.setState({
+		    processingFiles: false
+		});
+
+		var filenames = res.data.map((file) => {
+		    return file.name;
+		});
+		var files = {};
+		res.data.map((file) => {
+		    files[file.name] = file;
+		});
+
+		let baseurl =
+		    BASEURL +
+		    '/repos/' +
+		    username +
+		    '/' +
+		    data.githubRepoName +
+		    '/contents/'
+		const token = `${username}:${password}`;
+		const hash = base64.encode(token);
+		const basicAuth = 'Basic ' + hash;
+		let configs = {
+			'Access-Control-Allow-Origin': '*',
+		    headers: {
+			Authorization: basicAuth,
+		    },
+		};
+
+		// index.html
+		data.content = base64.encode(
+		    "<html>\n<body>\n" + 
+		    this.props.html.code.join('\n')
+		    + "\n</body>\n</html>\n\n"
+		);
+
+		if(filenames.indexOf('index.html') == -1){
+		    // index.html not in repo
+		    axios
+			.put(url + 'index.html', data, configs)
+			.then(res => {
+			    Alert.alert('created index.html');
+			})
+			.catch((error) => {
+			    alert(JSON.stringify(error));
+			});   
+		}else{
+		    alert('trying to update');
+		    // index.html already exists
+		    // so update it instead
+		    var sha = files['index.html'].sha;
+		    data.sha = sha;
+		    axios
+			.put(url + 'index.html', data, configs)
+			.then(res => {
+			    Alert.alert('updated index.html');
+			})
+			.catch((error) => {
+			    alert(JSON.stringify(error));
+			});
+		}
+
+		/*
+
+		data.content = base64.encode(
+		    "{" + 
+		    this.props.css.code.join('\n')
+		    + "}"
+		);
+		// style.reactcss
+		if(filenames.indexOf('style.reactcss') == -1){
+		    axios
+			.put(url + 'style.reactcss', data, configs)
+			.then(res => {
+			    Alert.alert('created style.reactcss');
+			})
+			.catch((error) => {
+
+			});		    
+		}else{
+		    // index.html already exists
+		    // so update it instead
+		    var sha = files['style.reactcss'].sha;
+		    data.sha = sha;
+		    axios
+			.put(url + 'style.reactcss', data, configs)
+			.then(res => {
+			    Alert.alert('updated style.reactcss');
+			})
+			.catch((error) => {
+			    alert(JSON.stringify(error));
+			});
+
+		}
+
+		*/
+	    })
     }
-      title={'push to github'}
-      />
-      <Button
-        onPress = {() =>
-          {
-            this.addFile(this.state.myKey, "vishnu21", exampleData2)
 
-      }
+    saveData(value){
+	this.setState({"myKey": value});
     }
-      title={'add file'}
-      />
-      <Text>
-{JSON.stringify(this.state.error)}
-</Text>
-    </View>
-    )
-  }
-
-
-getRepos(username) {
-
-  let url = BASEURL + '/user';
-  let configs = {
-    'Access-Control-Allow-Origin': '*',
-  };
-  axios
-    .get(url, configs)
-    .then(res => {
-
-      alert(1);
-    })
-    .catch((error) => {
-      if (error.response) {
-        this.setState({error:error.response.data});
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        this.setState({error:error.request});
-        console.log(error.request);
-      } else {
-        this.setState({error:error.message});
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
-};
-
-
-createRepo(username, password, data) {
-  console.log('Creating repo...');
-  let url = BASEURL + '/user/repos';
-  const token = `${username}:${password}`;
-  const hash = base64.encode(token);
-  const basicAuth = 'Basic ' + hash;
-  let configs = {
-    'Access-Control-Allow-Origin': '*',
-    headers: {
-      Authorization: basicAuth,
-    },
-  };
-  axios
-    .post(url, data, configs)
-    .then(res => {
-
-      console.log(res.status);
-    })
-    .catch((error) => {
-      this.setState({error:error.response.data});
-      alert(url);
-      console.log(url)
-    });
-};
-
-
-addFile(username, password, data) {
-  console.log('Addding file to repo...');
-  let url =
-    BASEURL +
-    '/repos/' +
-    username +
-    '/' +
-    data.githubRepoName +
-    '/contents/' +
-    data.githubFileName;
-  const token = `${username}:${password}`;
-  const hash = base64.encode(token);
-  const basicAuth = 'Basic ' + hash;
-  let configs = {
-    'Access-Control-Allow-Origin': '*',
-    headers: {
-      Authorization: basicAuth,
-    },
-  };
-  axios
-    .put(url, data, configs)
-    .then(res => {
-      console.log(res.status);
-    })
-    .catch((error) => {
-      this.setState({error:error.response.data});
-      alert(url);
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-    });
-};
-
-saveData(value){
-  this.setState({"myKey": value});
-}
-getState(){
-return this.state.myKey
-}
+    getState(){
+	return this.state.myKey
+    }
 
 }

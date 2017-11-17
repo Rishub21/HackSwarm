@@ -16,7 +16,7 @@ import { MonoText } from '../components/StyledText';
 
 import * as Rx from "rxjs/Rx";
 
-export default class HomeScreen extends React.Component {
+export default class CodeScreen extends React.Component {
 
     static navigationOptions = {
 	header: null,
@@ -25,13 +25,21 @@ export default class HomeScreen extends React.Component {
     componentDidMount(){
     }
     
-    render() {	
-	
-	var x = this.props.screenProps.code.map((line, number) => {
+    render() {
+	var code;
+	var lineNumber;
+	if(this.props.screenProps.state.isHtml){
+	    code = this.props.screenProps.state.html.code;
+	    lineNumber = this.props.screenProps.state.html.currentLine;
+	}else{
+	    code = this.props.screenProps.state.css.code;
+	    lineNumber = this.props.screenProps.state.css.currentLine;
+	}
+	var x = code.map((line, number) => {
 	    number = number + 1;
-	    return <Text key={number} style={number == this.props.screenProps.currentLine ? styles.currentLine : {fontSize: 20,
-														  paddingTop: 4,
-														  paddingBottom: 4,
+	    return <Text key={number} style={number == lineNumber ? styles.currentLine : {fontSize: 20,
+											  paddingTop: 4,
+											  paddingBottom: 4,
 	    }}>
 		<Text style={styles.lineNumber}> {number < 10 ? ' ' + number : number}: </Text>
 		<Text style={{backgroundColor: 'transparent'}}>{line}</Text>

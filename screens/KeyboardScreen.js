@@ -1,23 +1,13 @@
 import React from 'react';
 import {
     TextInput,
-    AsyncStorage,
     Button,
-    Image,
-    Platform,
     ScrollView,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
+    Switch
 } from 'react-native';
-import { WebBrowser } from 'expo';
-
-import { MonoText } from '../components/StyledText';
-
-import {Keyboard} from '../components/Keyboard';
-import {TypeButton} from '../components/TypeButton';
-
 
 export default class KeyboardScreen extends React.Component {
     constructor(){
@@ -29,6 +19,16 @@ export default class KeyboardScreen extends React.Component {
     };
 
     render() {
+	var code;
+	var lineNumber;
+	if(this.props.screenProps.state.isHtml){
+	    code = this.props.screenProps.state.html.code;
+	    lineNumber = this.props.screenProps.state.html.currentLine;
+	}else{
+	    code = this.props.screenProps.state.css.code;
+	    lineNumber = this.props.screenProps.state.css.currentLine;
+	}
+	var currentCode = code[lineNumber - 1];
 	return (
 	    <View style={styles.container}>
 		<ScrollView style={styles.container}
@@ -38,22 +38,32 @@ export default class KeyboardScreen extends React.Component {
 			    keyboardShouldPersistTaps={'always'}
 		>
 		    <Text>
-			line {this.props.screenProps.currentLine}
+			line {lineNumber}
 		    </Text>
 		    <TextInput
 			style={styles.textInput}
-			defaultValue={this.props.screenProps.currentCode}
-			placeholder={'new line'}
-			onChangeText={(text) => {
+			      defaultValue={currentCode}
+			      placeholder={'new line'}
+			      onChangeText={(text) => {
 				this.props.screenProps.events.next(
 				    {
 					action: 'change_line',
 					value: text
 				    });
+				
 			}}
-			autoCapitalize={'none'}
-			autoFocus={false}
-			blurOnSubmit={false}
+			      onSubmitEditing={() => {
+				      this.props.screenProps.events.next(
+					  {
+					      action: 'insert_line',
+					      value: null
+					  });
+				      
+			      }}
+			
+			      autoCapitalize={'none'}
+			      autoFocus={false}
+			      blurOnSubmit={false}
 		    />
 
 		    <View style={styles.boxrow}>
@@ -65,9 +75,9 @@ export default class KeyboardScreen extends React.Component {
 					    {
 						action: 'insert_line',
 						value: null
-					});
+					    });
 				}}
-				title={"insert line"}
+					title={"insert line"}
 			    />
 			</View>
 			<View
@@ -80,7 +90,7 @@ export default class KeyboardScreen extends React.Component {
 						value: null
 					    });
 				}}
-				title={"kill line"}
+					title={"kill line"}
 			    />
 			</View>
 		    </View>
@@ -94,9 +104,9 @@ export default class KeyboardScreen extends React.Component {
 					    {
 						action: 'key_arrow_up',
 						value: null
-					});
+					    });
 				}}
-				title={"↑"}
+					title={"↑"}
 			    />
 			</View>
 			<View
@@ -107,12 +117,27 @@ export default class KeyboardScreen extends React.Component {
 					    {
 						action: 'key_arrow_down',
 						value: null
-					});
+					    });
 				}}
-				title={"↓"}
+					title={"↓"}
 			    />
 			</View>
 		    </View>
+		    <View style={styles.boxrow}>
+			<Switch
+			    onValueChange={(value) => {
+				    this.props.screenProps.events.next({
+					action: 'swap_html_css',
+					value: value
+				    })
+			    }}
+			    style={{marginBottom: 10}}
+			    value={this.props.screenProps.state.isHtml} />
+			<Text>
+			    {this.props.screenProps.state.isHtml ? "HTML" : "CSS"}
+			</Text>
+		    </View>
+		    
 		</ScrollView>
 	    </View>
 	);

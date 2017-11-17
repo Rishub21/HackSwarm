@@ -19,10 +19,10 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
-  serverId = "Not connected";
-  clientId = "Not connected";
+  serverId = "initialstateserver";
+  clientId = "initialstateclient";
 
-  render() {
+  render() { 
     return (
 
       <View style={styles.container}>
@@ -37,23 +37,18 @@ export default class HomeScreen extends React.Component {
                 BluetoothCP.acceptInvitation(user.id);
                 // alert("accepted");
                 // alert(user.id);
-                console.log("Server invited by client: ", user.id);
+                console.log("Server invited by client: ")
+                console.log(user.id);
                 // console.log("accepted");
                 this.clientId = user.id;
               }.bind(this));
-
-              BluetoothCP.addConnectedListener(function(user) {
-                console.log(user.id);
-                BluetoothCP.sendMessage(this.clientId, user.id);
-                console.log('message sent');
-              });
 
               BluetoothCP.addReceivedMessageListener(function(user) {
                 //Parsing message
                 console.log(user.message);
                 alert(user.message);
-                this.serverId = user.message;
-              })
+                this.serverId = JSON.stringify(user.message);
+              });
 
             }}
             title={"Broadcast server"}
@@ -62,9 +57,9 @@ export default class HomeScreen extends React.Component {
           <Button
             onPress={() => {
               alert(this.serverId);
-              BluetoothCP.sendMessage(this.serverId, this.clientId);
+              BluetoothCP.sendMessage("hello from server", this.clientId);
             }}
-            title={"Send Message"}
+            title={"Send Message to Client"}
           />
 
           <View style={styles.welcomeContainer}>
@@ -86,13 +81,15 @@ export default class HomeScreen extends React.Component {
               BluetoothCP.addPeerDetectedListener(function(user) {
                 // console.log("addPeerDetectedListener");
                 BluetoothCP.inviteUser(user.id);
-                console.log("Client inviting server: ", user.id);
+                console.log("Client inviting server: "); 
+                console.log(user.id);
                 this.serverId = user.id;
               }.bind(this));
 
               BluetoothCP.addConnectedListener(function(user) {
-                console.log("Server connected: ", user.id);
-                BluetoothCP.sendMessage(this.clientId, user.id);
+                console.log("Server connected: ");
+                console.log(user.id);
+                BluetoothCP.sendMessage("Hello from client", user.id);
                 console.log('message sent');
               });
 
@@ -110,6 +107,8 @@ export default class HomeScreen extends React.Component {
               BluetoothCP.addReceivedMessageListener(function(user) {
                 //Parsing message
                 console.log(user.message);
+                alert(user.message);
+                this.serverId = JSON.stringify(user.message);
               });
             }}
             title={"Connect to Server"}
@@ -120,33 +119,19 @@ export default class HomeScreen extends React.Component {
               alert(this.clientId);
               BluetoothCP.sendMessage(this.clientId, this.serverId);
             }}
-            title={"Send Message"}
+            title={"Send Message to Server"}
           />
 
-          <Github/>
+          <Github
+            html={this.props.screenProps.state.html}
+            css={this.props.screenProps.state.css}
+          />
 
         </ScrollView>
       </View>
     );
   }
 
-/*
-  _attachListeners() {
-    this.listener1 = BluetoothCP.addPeerDetectedListener(this._callback);
-    this.listener2 = BluetoothCP.addPeerLostListener(this._callback);
-    this.listener3 = BluetoothCP.addReceivedMessageListener(this._callback);
-    this.listener4 = BluetoothCP.addInviteListener(this._callback);
-    this.listener5 = BluetoothCP.addConnectedListener(this._callback);
-  }
-
-  detachListeners() {
-      this.listener1.remove();
-      this.listener2.remove();
-      this.listener3.remove();
-      this.listener4.remove();
-      this.listener5.remove();
-  }
-*/
   _maybeRenderDevelopmentModeWarning() {
     if (__DEV__) {
       const learnMoreButton = (
@@ -182,7 +167,13 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+    lineNumber: {
+  color: 'red'
+    },
+    currentLine: {
+  backgroundColor: "blue"
+    },
+      container: {
     flex: 1,
     backgroundColor: '#fff',
   },

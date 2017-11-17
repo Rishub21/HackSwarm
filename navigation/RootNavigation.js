@@ -1,7 +1,7 @@
 import { Notifications } from 'expo';
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
-
+import BluetoothCP from 'react-native-bluetooth-cross-platform';
 import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
@@ -26,77 +26,164 @@ const RootStackNavigator = StackNavigator(
 
 export default class RootNavigator extends React.Component {
     constructor(props){
-	super(props);
-	this.state = {
-	    code: [
-		"a",
-		"b",
-		"c",
-		"d",
-		"e",
-		"f"
-
-	    ],
-	    currentCode: "a",
-	    currentLine: 1
-	};
+		super(props);
+		this.state = {
+		    html: {
+			code: [
+			    "<h1>",
+			    "hello world",
+			    "</h1>"
+			],
+			currentLine: 1
+		    },
+		    css: {
+			code: [],
+			currentLine: 1
+		    },
+		    isHtml: true
+		};
     }
-    
-  componentDidMount() {
-    this._notificationSubscription = this._registerForPushNotifications();
-  }
 
-  componentWillUnmount() {
-    this._notificationSubscription && this._notificationSubscription.remove();
-  }
+	S8 = "8d2fbf72a9e438d3";
+	NOTE4 = "3a66ebedd0b569c3";
+	S3 = "12345";
+    
+	componentDidMount() {
+		this._notificationSubscription = this._registerForPushNotifications();
+	}
+
+	componentWillUnmount() {
+		this._notificationSubscription && this._notificationSubscription.remove();
+	}
 
     render() {
 	var events = new Subject();
 	events.subscribe((event) => {
 	    var newNumber;
 	    var code;
+	    var state;
+
+		BluetoothCP.addReceivedMessageListener(function(user) {
+			//Parsing message
+			console.log(user.message);
+			//alert(user.message);
+			this.setState(JSON.parse(user.message));
+		});
+
 	    switch(event.action){
 		case "key_arrow_up":
-		    newNumber = this.state.currentLine == 1 ? 1 : this.state.currentLine - 1;
+		    if(this.state.isHtml){
+			newNumber = this.state.html.currentLine == 1 ? 1 : this.state.html.currentLine - 1;
+			this.setState({
+			    html: {
+				code: this.state.html.code,
+				currentLine: newNumber
+			    }
+			});
+		    }
+		    if(!this.state.isHtml){
+			newNumber = this.state.css.currentLine == 1 ? 1 : this.state.css.currentLine - 1;
+			this.setState({
+			    css: {
+				code: this.state.css.code,
+				currentLine: newNumber
+			    }
+			});
+
+		    }
 		    break;
 		case "key_arrow_down":
-		    newNumber = this.state.currentLine == this.state.code.length + 1 ? this.state.code.length + 1 : this.state.currentLine + 1;
+		    if(this.state.isHtml){
+			newNumber = this.state.html.currentLine == this.state.html.code.length + 1 ? this.state.html.code.length + 1 : this.state.html.currentLine + 1;
+			this.setState({
+			    html: {
+				code: this.state.html.code,
+				currentLine: newNumber
+			    }
+			});
+		    }
+		    if(!this.state.isHtml){
+			newNumber = this.state.css.currentLine == this.state.css.code.length + 1 ? this.state.css.code.length + 1 : this.state.css.currentLine + 1;
+			this.setState({
+			    css: {
+				code: this.state.css.code,
+				currentLine: newNumber
+			    }
+			});
+		    }
 		    break;
 		case "change_line":
-		    code = this.state.code;
-		    code[this.state.currentLine - 1] = event.value;
-		    this.setState({code: code});
+		    if(this.state.isHtml){
+			code = this.state.html.code;
+			code[this.state.html.currentLine - 1] = event.value;
+			this.setState({html: {
+			    code: code,
+			    currentLine: this.state.html.currentLine}
+			});
+		    }else{
+			code = this.state.css.code;
+			code[this.state.css.currentLine - 1] = event.value;
+			this.setState({css: {
+			    code: code,
+			    currentLine: this.state.css.currentLine}
+			});
+		    }
 		    break;
 		case "insert_line":
-		    code = this.state.code;
-		    code.splice(this.state.currentLine, 0, "");
-		    this.setState({
-			code: code,
-			currentLine: this.state.currentLine + 1,
-			currentCode: code[this.state.currentLine]
-		    });
+		    if(this.state.isHtml){
+			code = this.state.html.code;
+			code.splice(this.state.html.currentLine, 0, "");
+			this.setState({
+			    html: {
+				code: code,
+				currentLine: this.state.html.currentLine + 1
+			    }
+			});
+		    }else{
+			code = this.state.css.code;
+			code.splice(this.state.css.currentLine, 0, "");
+			this.setState({
+			    css: {
+				code: code,
+				currentLine: this.state.css.currentLine + 1
+			    }
+			});
+		    }
 		    break;
 		case "kill_line":
-		    code = this.state.code;
-		    code.splice(this.state.currentLine - 1, 1);
-		    this.setState({
-			code: code,
-			currentCode: code[this.state.currentLine - 1]
-		    });	    
+		    if(this.state.isHtml){
+			code = this.state.html.code;
+			code.splice(this.state.html.currentLine, 1);
+			this.setState({
+			    html: {
+				code: code,
+				currentLine: this.state.html.currentLine + 1
+			    }
+			});
+		    }else{
+			code = this.state.css.code;
+			alert(typeof code);
+			code.splice(this.state.css.currentLine, 1);
+			this.setState({
+			    css: {
+				code: code,
+				currentLine: this.state.css.currentLine + 1
+			    }
+			});
+		    }
+		    break;
+		case "swap_html_css":
+		    state = this.state;
+		    state.isHtml = event.value;
+		    this.setState(state);
 		    break;
 	    }
-	    if(event.action == "key_arrow_up" || event.action == "key_arrow_down"){
-		var newCode = this.state.code[newNumber - 1];
-		this.setState({currentLine: newNumber,
-			       currentCode: newCode
-		});
-	    }
-
+	    var state = this.state;
+	    //alert(state);
+        BluetoothCP.sendMessage(JSON.stringify(state), this.S8);
 	});
 	return <RootStackNavigator screenProps={{events: events,
-						 code: this.state.code,
-						 currentLine: this.state.currentLine,
-						 currentCode: this.state.currentCode
+						 state: this.state
 	}} />;
     }
     

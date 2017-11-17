@@ -44,7 +44,7 @@ export default class HomeScreen extends React.Component {
                 //Parsing message
                 console.log(user.message);
                 alert(user.message);
-              })
+              });
 
             }}
             title={"Broadcast server"}
@@ -99,7 +99,7 @@ export default class HomeScreen extends React.Component {
           <Button
             onPress={() => {
               alert(this.userId);
-              BluetoothCP.sendMessage("Connected hey there buddy!", this.userId);
+              BluetoothCP.sendMessage("Connected, hey there buddy!", this.userId);
             }}
             title={"Send Message"}
           />
