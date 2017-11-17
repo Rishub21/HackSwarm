@@ -5,6 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
 import TypeButton from './components/TypeButton';
 import Expo from 'expo';
+import BluetoothCP from 'react-native-bluetooth-cross-platform';
+
+alert(BluetoothCP);
 
 export default class App extends React.Component {
   state = {

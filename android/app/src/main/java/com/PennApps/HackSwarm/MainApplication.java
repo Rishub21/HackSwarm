@@ -21,7 +21,7 @@ public class MainApplication extends MultiDexApplication {
         // TODO: add cool native modules
 
         // Needed for `react-native link`
-        new MainReactPackage(),
+        // new MainReactPackage(),
         new NetworkManagerPackage()
     );
   }

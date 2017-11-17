@@ -7,9 +7,10 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
 } from 'react-native';
 import { WebBrowser } from 'expo';
-
+import BluetoothCP from 'react-native-bluetooth-cross-platform';
 import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
@@ -19,8 +20,14 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
+
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <Button
+          onPress={() => { BluetoothCP.advertise('WIFI-BT'); alert("pressed"); }}
+          title={"Connect to Device"}
+        />
+
           <View style={styles.welcomeContainer}>
             <Image
               source={
