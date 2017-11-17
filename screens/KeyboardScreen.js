@@ -17,6 +17,7 @@ import { MonoText } from '../components/StyledText';
 
 import {Keyboard} from '../components/Keyboard';
 import {TypeButton} from '../components/TypeButton';
+import {Github} from '../components/Github';
 
 
 export default class KeyboardScreen extends React.Component {
@@ -37,6 +38,7 @@ export default class KeyboardScreen extends React.Component {
 			    alwaysBounceVertical={false}
 		>
 		    <Keyboard events={this.props.screenProps.events}/>
+        <Github/>
 		</ScrollView>
 	    </View>
 	);
