@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    TextInput,
     AsyncStorage,
     Button,
     Image,
@@ -17,7 +18,6 @@ import { MonoText } from '../components/StyledText';
 
 import {Keyboard} from '../components/Keyboard';
 import {TypeButton} from '../components/TypeButton';
-import {Github} from '../components/Github';
 
 
 export default class KeyboardScreen extends React.Component {
@@ -36,9 +36,51 @@ export default class KeyboardScreen extends React.Component {
 			    contentContainerStyle={styles.contentContainer}
 			    bounce={false}
 			    alwaysBounceVertical={false}
+			    keyboardShouldPersistTaps={'always'}
 		>
-		    <Keyboard events={this.props.screenProps.events}/>
-        <Github/>
+			<TextInput
+			    style={{fontSize: 50, height: 80, borderColor: 'gray', borderWidth: 1, paddingLeft: 2}}
+			    defaultValue={this.props.screenProps.currentCode}
+			    placeholder={'new line'}
+			    onSubmitEditing={(event) => {
+				    this.props.screenProps.events.next(
+					{
+					    action: 'change_line',
+					    value: event.nativeEvent.text
+					});
+			    }}
+			    autoCapitalize={'none'}
+			    autoFocus={true}
+			    blurOnSubmit={false}
+			/>
+		    <View style={styles.boxrow}>
+			<View
+			    style={styles.button}>
+			    <Button
+				onPress={() => {
+					this.props.screenProps.events.next(
+					    {
+						action: 'key_arrow_up',
+						value: null
+					});
+				}}
+				title={"↑"}
+			    />
+			</View>
+			<View
+			    style={styles.button}>			
+			    <Button
+				onPress={() => {
+					this.props.screenProps.events.next(
+					    {
+						action: 'key_arrow_down',
+						value: null
+					});
+				}}
+				title={"↓"}
+			    />
+			</View>
+		    </View>
 		</ScrollView>
 	    </View>
 	);
@@ -52,90 +94,23 @@ const styles = StyleSheet.create({
     currentLine: {
 	backgroundColor: "blue"
     },
-      container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  }
+    boxrow: {
+	flexDirection: "row",
+	alignItems: 'flex-end'
+    },
+    button: {
+	flex: 1,
+	borderColor: 'red',
+	borderWidth: 1,
+	padding: 10
+    },
+    container: {
+	flex: 1,
+	paddingLeft: 2,
+	paddingRight: 2,
+	backgroundColor: '#fff',
+    },
+    contentContainer: {
+	paddingTop: 30,
+    }
 });

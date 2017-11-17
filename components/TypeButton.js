@@ -16,7 +16,9 @@ export class TypeButton extends React.Component {
 
   render(){
     return(
-    <View>
+	<View style={{width: "8.33%",
+		      borderWidth: 1,
+		      borderColor: "red"}}>
       <Button
         style = {styles.textbox}
         onPress = {() => {
@@ -58,7 +60,7 @@ const styles  = StyleSheet.create({
 
   },
 
-  textbox : {
-    width : Dimensions.get('window').width / 10
+    textbox : {
+	width : 10000
   }
 });

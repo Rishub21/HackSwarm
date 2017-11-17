@@ -4,6 +4,8 @@ import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
 import TypeButton from './components/TypeButton';
+import Expo from 'expo';
+
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
@@ -59,10 +61,11 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+      backgroundColor: '#fff',
+      marginTop: Expo.Constants.statusBarHeight
   },
   statusBarUnderlay: {
     height: 24,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'rgba(0,0,0,1)',
   },
 });

@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "hackswarm",
-    "description": "No description",
+    "name": "HackSwarm",
+    "description": "Peer-to-peer offline collaborative coding on mobile devices",
     "slug": "hackswarm",
     "privacy": "public",
     "sdkVersion": "22.0.0",
     "version": "1.0.0",
-      "primaryColor": "#cccccc",
+    "primaryColor": "#cccccc",
     "icon": "./assets/images/icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -14,10 +14,24 @@
       "backgroundColor": "#ffffff"
     },
     "packagerOpts": {
-      "assetExts": ["ttf"]
+      "assetExts": [
+        "ttf"
+      ]
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.PennApps.HackSwarm",
+      "publishBundlePath": "ios/hackswarm/Supporting/shell-app.bundle",
+      "publishManifestPath": "ios/hackswarm/Supporting/shell-app-manifest.json"
+    },
+    "android": {
+      "package": "com.PennApps.HackSwarm"
+    },
+    "isDetached": true,
+    "detach": {
+      "scheme": "exp0d468a3fb22443018a276f570b39969d",
+      "iosExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/ios-v2.0.4-sdk22.0.0-10110e7c-e9b1-43e6-b7e0-8a0e971480e8.tar.gz",
+      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.0.0-sdk22.0.0-7432f75c-05a1-4826-a456-02875e338222.tar.gz"
     }
   }
 }

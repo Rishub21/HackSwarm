@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
+import { TabNavigator, TabBarBottom, TabBarTop } from 'react-navigation';
 
 import Colors from '../constants/Colors';
 
@@ -63,7 +63,7 @@ export default TabNavigator(
 	    },
 	}),
 	tabBarComponent: TabBarBottom,
-	tabBarPosition: 'bottom',
+	tabBarPosition: 'top',
 	animationEnabled: false,
 	swipeEnabled: false,
     }
