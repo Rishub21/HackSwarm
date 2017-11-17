@@ -23,8 +23,8 @@ export default TabNavigator(
 	Output: {
 	    screen: OutputScreen,
 	},
-	Home: {
-	    screen: HomeScreen,
+	Settings: {
+	    screen: SettingsScreen,
 	},
     },
     {
