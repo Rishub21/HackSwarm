@@ -26,12 +26,6 @@ export default TabNavigator(
 	Home: {
 	    screen: HomeScreen,
 	},
-	Links: {
-	    screen: LinksScreen,
-	},
-	Settings: {
-	    screen: SettingsScreen,
-	},
     },
     {
 	navigationOptions: ({ navigation }) => ({
@@ -39,18 +33,24 @@ export default TabNavigator(
 		const { routeName } = navigation.state;
 		let iconName;
 		switch (routeName) {
-		    case 'Home':
+		    case 'Keyboard':
 			iconName =
 			    Platform.OS === 'ios'
-			    ? `ios-information-circle${focused ? '' : '-outline'}`
-			    : 'md-information-circle';
+			    ? `ios-grid${focused ? '' : '-outline'}`
+			    : 'md-grid';
 			break;
-		    case 'Links':
-			iconName = Platform.OS === 'ios' ? `ios-link${focused ? '' : '-outline'}` : 'md-link';
-			break;
-		    case 'Settings':
+		    case 'Code':
 			iconName =
-			    Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-options';
+			    Platform.OS === 'ios'
+			    ? `ios-menu${focused ? '' : '-outline'}`
+			    : 'md-menu';
+			break;
+		    case 'Output':
+			iconName =
+			    Platform.OS === 'ios'
+			    ? `ios-phone-portrait${focused ? '' : '-outline'}`
+			    : 'md-phone-portrait';
+			break;
 		}
 		return (
 		    <Ionicons
