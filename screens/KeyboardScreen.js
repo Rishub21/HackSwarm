@@ -31,7 +31,11 @@ export default class KeyboardScreen extends React.Component {
     render() {
 	return (
 	    <View style={styles.container}>
-		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+		<ScrollView style={styles.container}
+			    contentContainerStyle={styles.contentContainer}
+			    bounce={false}
+			    alwaysBounceVertical={false}
+		>
 		    <Keyboard events={this.props.screenProps.events}/>
 		</ScrollView>
 	    </View>
