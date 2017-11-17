@@ -88,16 +88,14 @@ export class Keyboard extends React.Component {
 			style = {styles.textbox}
 			onPress = {() => {
 				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
 			}
 			}
 			title = {"←"}
 		    />
 		    <Button
 			style = {styles.textbox}
-			onPress = {() => {
-				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
+				onPress = {() => {
+					this.props.events.next('key_arrow_up');
 			}
 			}
 			title = {" ↑ "}
@@ -106,7 +104,6 @@ export class Keyboard extends React.Component {
 			style = {styles.textbox}
 			onPress = {() => {
 				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
 			}
 			}
 			title = {"→ "}
@@ -114,8 +111,7 @@ export class Keyboard extends React.Component {
 		    <Button
 			style = {styles.textbox}
 			onPress = {() => {
-				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
+					this.props.events.next('key_arrow_down');
 			}
 			}
 			title = {"↓"}
@@ -143,7 +139,6 @@ export class Keyboard extends React.Component {
 			style = {styles.textbox}
 			onPress = {() => {
 				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
 			}
 			}
 			title = {"←"}
@@ -152,7 +147,8 @@ export class Keyboard extends React.Component {
 			style = {styles.textbox}
 			onPress = {() => {
 				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
+				this.props.events.next('key_arrow_up');
+
 			}
 			}
 			title = {" ↑ "}
@@ -161,16 +157,15 @@ export class Keyboard extends React.Component {
 			style = {styles.textbox}
 			onPress = {() => {
 				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
 			}
 			}
 			title = {"→"}
 		    />
 		    <Button
 			style = {styles.textbox}
-			onPress = {() => {
-				//AsyncStorage.setItem("KeyBoard2", "A");
-				Alert.alert("pressed")
+				onPress = {() => {
+					this.props.events.next('key_arrow_down');
+
 			}
 			}
 			title = {"↓"}

@@ -51,10 +51,10 @@ export default class RootNavigator extends React.Component {
 	var events = new Subject();
 	events.subscribe((event) => {
 	    switch(event){
-		case "key_up":
+		case "key_arrow_up":
 		    this.setState({currentLine: this.state.currentLine - 1});
 		    break;
-		case "key_down":
+		case "key_arrow_down":
 		    this.setState({currentLine: this.state.currentLine + 1});
 		    break;
 	    }
