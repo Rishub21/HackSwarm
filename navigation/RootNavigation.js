@@ -25,6 +25,20 @@ const RootStackNavigator = StackNavigator(
 );
 
 export default class RootNavigator extends React.Component {
+    constructor(props){
+	super(props);
+	this.state = {
+	    code: [
+		"<Text>",
+		"<h1>",
+		"Hello world",
+		"</h1>",
+		"</Text>"
+	    ],
+	    currentLine: 1
+	}
+    }
+    
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
   }
@@ -34,10 +48,18 @@ export default class RootNavigator extends React.Component {
   }
 
     render() {
-	events = new Subject();
-	events.next('key_down');
-
-	return <RootStackNavigator screenProps={{events: events}} />;
+	var events = new Subject();
+	events.subscribe((event) => {
+	    switch(event){
+		case "key_up":
+		    this.setState({currentLine: this.state.currentLine - 1});
+		    break;
+		case "key_down":
+		    this.setState({currentLine: this.state.currentLine + 1});
+		    break;
+	    }
+	});
+	return <RootStackNavigator screenProps={{events: events, code: this.state.code, currentLine: this.state.currentLine}} />;
     }
     
   _registerForPushNotifications() {

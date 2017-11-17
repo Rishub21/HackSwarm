@@ -25,12 +25,10 @@ export default class OutputScreen extends React.Component {
     };
 
     render() {
-	//var compactedCode = this.props.code.join();
-	var compactedCode = "";
+	var compactedCode = this.props.screenProps.code.join("");
 	return (
 	    <View style={styles.container}>
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-		    <Text>{compactedCode}</Text>
 		    <HTMLView
 			value={compactedCode}
 		    />
