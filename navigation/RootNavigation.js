@@ -29,13 +29,15 @@ export default class RootNavigator extends React.Component {
 	super(props);
 	this.state = {
 	    code: [
-		"<Text>",
-		"<h1>",
-		"Hello world",
-		"</h1>",
-		"</Text>"
+		"a",
+		"b",
+		"c",
+		"d",
+		"e",
+		"f"
+
 	    ],
-	    currentCode: "<Text>",
+	    currentCode: "a",
 	    currentLine: 1
 	};
     }
@@ -52,6 +54,7 @@ export default class RootNavigator extends React.Component {
 	var events = new Subject();
 	events.subscribe((event) => {
 	    var newNumber;
+	    var code;
 	    switch(event.action){
 		case "key_arrow_up":
 		    newNumber = this.state.currentLine == 1 ? 1 : this.state.currentLine - 1;
@@ -60,9 +63,26 @@ export default class RootNavigator extends React.Component {
 		    newNumber = this.state.currentLine == this.state.code.length + 1 ? this.state.code.length + 1 : this.state.currentLine + 1;
 		    break;
 		case "change_line":
-		    let code = this.state.code;
+		    code = this.state.code;
 		    code[this.state.currentLine - 1] = event.value;
 		    this.setState({code: code});
+		    break;
+		case "insert_line":
+		    code = this.state.code;
+		    code.splice(this.state.currentLine, 0, "");
+		    this.setState({
+			code: code,
+			currentLine: this.state.currentLine + 1,
+			currentCode: code[this.state.currentLine]
+		    });
+		    break;
+		case "kill_line":
+		    code = this.state.code;
+		    code.splice(this.state.currentLine - 1, 1);
+		    this.setState({
+			code: code,
+			currentCode: code[this.state.currentLine - 1]
+		    });	    
 		    break;
 	    }
 	    if(event.action == "key_arrow_up" || event.action == "key_arrow_down"){
