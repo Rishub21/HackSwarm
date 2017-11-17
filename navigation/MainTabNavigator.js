@@ -14,11 +14,11 @@ import SettingsScreen from '../screens/SettingsScreen';
 
 export default TabNavigator(
     {
-	Keyboard: {
-	    screen: KeyboardScreen,
-	},
 	Code: {
 	    screen: CodeScreen,
+	},
+	Keyboard: {
+	    screen: KeyboardScreen,
 	},
 	Output: {
 	    screen: OutputScreen,

@@ -17,43 +17,20 @@ import { MonoText } from '../components/StyledText';
 import * as Rx from "rxjs/Rx";
 
 export default class HomeScreen extends React.Component {
-    constructor(){
-	super();
-	this.state = {
-	    code: [
-		"At school, they instruct us to look up",
-		"and watch the Cuban-cursed sky.",
-		"Search for a streak of light.",
-		"Listen for a piercing shriek,",
-		"the whistle that will warn us",
-		"as poisonous A-bombs",
-		"zoom close."
-	    ],
-	    currentLine: 1
-	};
-    }
 
     static navigationOptions = {
 	header: null,
     };
 
     componentDidMount(){
-	this.props.screenProps.events.subscribe((event) => {
-	    switch(event){
-		case "key_up":
-		    this.setState({currentLine: this.state.currentLine - 1});
-		    break;
-		case "key_down":
-		    this.setState({currentLine: this.state.currentLine + 1});
-		    break;
-	    }
-	});
     }
     
     render() {	
-	var x = this.state.code.map((line, number) => {
-	    return <Text key={number} style={number == this.state.currentLine ? styles.currentLine : null}>
-		<Text style={styles.lineNumber}>{number + 1}: </Text>
+	
+	var x = this.props.screenProps.code.map((line, number) => {
+	    number = number + 1;
+	    return <Text key={number} style={number == this.props.screenProps.currentLine ? styles.currentLine : null}>
+		<Text style={styles.lineNumber}>{number}: </Text>
 		<Text>{line}</Text>
 	    </Text>;
 	})
@@ -62,15 +39,6 @@ export default class HomeScreen extends React.Component {
 	    <View style={styles.container}>
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 		    {x}
-		    <Button
-			onPress={() => {
-				this.props.screenProps.events.next('key_down');
-				//this.props.screenProps.emitter.next('key_down')
-			}}
-			title="Debug"
-			color="#841584"
-			accessibilityLabel="Learn more about this purple button"
-		    />
 		</ScrollView>
 	    </View>
 	);
