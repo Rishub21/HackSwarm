@@ -7,7 +7,7 @@ import TypeButton from './components/TypeButton';
 import Expo from 'expo';
 import BluetoothCP from 'react-native-bluetooth-cross-platform';
 
-alert(BluetoothCP);
+// alert(BluetoothCP);
 
 export default class App extends React.Component {
   state = {

@@ -18,19 +18,40 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
+  userId = "1234567";
+
   render() {
     return (
 
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <Button
-          onPress={() => { BluetoothCP.advertise('WIFI-BT'); alert("pressed"); }}
-          title={"Connect to Device"}
-        />
+          <Button
+            onPress={() => { 
+              BluetoothCP.advertise('WIFI-BT'); 
+              alert("broadcasting"); 
+
+              BluetoothCP.addInviteListener(function(user) {
+                alert("Invited!");
+                BluetoothCP.acceptInvitation(user.id);
+                alert("accepted");
+                alert(user.id);
+                console.log(user.id);
+                console.log("accepted");
+              });
+
+              BluetoothCP.addReceivedMessageListener(function(user) {
+                //Parsing message
+                console.log(user.message);
+                alert(user.message);
+              })
+
+            }}
+            title={"Broadcast server"}
+          />
 
           <View style={styles.welcomeContainer}>
             <Image
-              source={
+              source={                                                             
                 __DEV__
                   ? require('../assets/images/robot-dev.png')
                   : require('../assets/images/robot-prod.png')
@@ -39,38 +60,71 @@ export default class HomeScreen extends React.Component {
             />
           </View>
 
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
+          <Button
+            onPress={() => { 
+              console.log("pressed");
+              BluetoothCP.browse();
+              BluetoothCP.addPeerDetectedListener(function(user) {
+                console.log("addPeerDetectedListener");
+                BluetoothCP.inviteUser(user.id);
+                this.userId = user.id;
+              }.bind(this));
 
-            <Text style={styles.getStartedText}>Get started by opening</Text>
+              BluetoothCP.addConnectedListener(function(user) {
+                console.log(user.id);
+                BluetoothCP.sendMessage("Connected hey there buddy!", user.id);
+                console.log('message sent');
+              });
 
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
-            </View>
+              console.log(this.userId);
 
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
+              BluetoothCP.addPeerLostListener(function(user) {
+                console.log(`Lost a peer: ${user.id}`);
+                BluetoothCP.disconnectFromPeer(user.id);
+              });
 
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
-          </View>
+              BluetoothCP.addInviteListener(function(user) {
+                BluetoothCP.acceptInvitation(user.id);
+              });
+
+              BluetoothCP.addReceivedMessageListener(function(user) {
+                //Parsing message
+                console.log(user.message);
+              });
+            }}
+            title={"Connect to Server"}
+          />
+
+          <Button
+            onPress={() => {
+              alert(this.userId);
+              BluetoothCP.sendMessage("Connected hey there buddy!", this.userId);
+            }}
+            title={"Send Message"}
+          />
+
         </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View>
       </View>
     );
   }
 
+/*
+  _attachListeners() {
+    this.listener1 = BluetoothCP.addPeerDetectedListener(this._callback);
+    this.listener2 = BluetoothCP.addPeerLostListener(this._callback);
+    this.listener3 = BluetoothCP.addReceivedMessageListener(this._callback);
+    this.listener4 = BluetoothCP.addInviteListener(this._callback);
+    this.listener5 = BluetoothCP.addConnectedListener(this._callback);
+  }
+
+  detachListeners() {
+      this.listener1.remove();
+      this.listener2.remove();
+      this.listener3.remove();
+      this.listener4.remove();
+      this.listener5.remove();
+  }
+*/
   _maybeRenderDevelopmentModeWarning() {
     if (__DEV__) {
       const learnMoreButton = (
