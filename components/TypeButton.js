@@ -27,7 +27,7 @@ export class TypeButton extends React.Component {
 
             data.string = data.string + newLetter;
 
-            this.props.onPress();
+            this.props.onPress(newLetter);
           }
         }
         title = {this.props.letter}
