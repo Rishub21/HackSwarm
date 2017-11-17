@@ -10,7 +10,6 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Alert,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
@@ -38,21 +37,54 @@ export default class KeyboardScreen extends React.Component {
 			    alwaysBounceVertical={false}
 			    keyboardShouldPersistTaps={'always'}
 		>
-			<TextInput
-			    style={{fontSize: 50, height: 80, borderColor: 'gray', borderWidth: 1, paddingLeft: 2}}
-			    defaultValue={this.props.screenProps.currentCode}
-			    placeholder={'new line'}
-			    onSubmitEditing={(event) => {
-				    this.props.screenProps.events.next(
-					{
-					    action: 'change_line',
-					    value: event.nativeEvent.text
+		    <Text>
+			line {this.props.screenProps.currentLine}
+		    </Text>
+		    <TextInput
+			style={styles.textInput}
+			defaultValue={this.props.screenProps.currentCode}
+			placeholder={'new line'}
+			onChangeText={(text) => {
+				this.props.screenProps.events.next(
+				    {
+					action: 'change_line',
+					value: text
+				    });
+			}}
+			autoCapitalize={'none'}
+			autoFocus={false}
+			blurOnSubmit={false}
+		    />
+
+		    <View style={styles.boxrow}>
+			<View
+			    style={styles.button}>
+			    <Button
+				onPress={() => {
+					this.props.screenProps.events.next(
+					    {
+						action: 'insert_line',
+						value: null
 					});
-			    }}
-			    autoCapitalize={'none'}
-			    autoFocus={true}
-			    blurOnSubmit={false}
-			/>
+				}}
+				title={"insert line"}
+			    />
+			</View>
+			<View
+			    style={styles.button}>			
+			    <Button
+				onPress={() => {
+					this.props.screenProps.events.next(
+					    {
+						action: 'kill_line',
+						value: null
+					    });
+				}}
+				title={"kill line"}
+			    />
+			</View>
+		    </View>
+
 		    <View style={styles.boxrow}>
 			<View
 			    style={styles.button}>
@@ -89,6 +121,7 @@ export default class KeyboardScreen extends React.Component {
 
 const styles = StyleSheet.create({
     lineNumber: {
+	flex: 1,
 	color: 'red'
     },
     currentLine: {
@@ -97,6 +130,13 @@ const styles = StyleSheet.create({
     boxrow: {
 	flexDirection: "row",
 	alignItems: 'flex-end'
+    },
+    textInput: {
+	fontSize: 50,
+	height: 80,
+	borderColor: 'gray',
+	borderWidth: 1,
+	paddingLeft: 2
     },
     button: {
 	flex: 1,
