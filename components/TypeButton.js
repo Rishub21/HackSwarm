@@ -57,11 +57,11 @@ export default class RealBoard extends Component {
     //Alert.alert(stringer)
     var numerals = ["1","2","3","4","5","6","7","8","9","0"];
 
-    var lower_buttons0 = ["q", "w", "e", "r","t", "y", "u", "i", "o", "p", "{", "}"];
+    var lower_buttons0 = ["q", "w", "e", "r","t", "y", "u", "i", "o", "p", "{", "}", "+", "=", "-"];
     var lower_buttons1 = ["a", "s", "d", "f","g", "h", "j", "k", "l", ":", '"',";" ,  "<", ">"];
     var lower_buttons2 = ["z", "x", "c", "v","b", "n", "m", ",", ".", "?"];
 
-    var upper_buttons0 = ["Q", "W", "E", "R","T", "Y", "U", "I", "O", "P","{", "}"];
+    var upper_buttons0 = ["Q", "W", "E", "R","T", "Y", "U", "I", "O", "P","{", "}", "+", "=", "-"];
     var upper_buttons1 = ["A", "S", "D", "F","G", "H", "J", "K", "L",":", '"',";", "<", ">"];
     var upper_buttons2 = ["Z", "X", "C", "V","B", "N", "M", ",", ".", "?"];
 
@@ -145,9 +145,12 @@ export default class RealBoard extends Component {
           }
           title = {"↓"}
         />
+
       </View>
 
-
+      <View style = {styles.boxrow}>
+        {number}
+      </View>
       </View>;
     }
 
@@ -198,6 +201,9 @@ export default class RealBoard extends Component {
           title = {"↓"}
         />
       </View>
+      <View style = {styles.boxrow}>
+        {number}
+      </View>
       </View>;
     }
 
@@ -216,15 +222,6 @@ export default class RealBoard extends Component {
         }
         title = "CAPS"
       />
-      <Button
-        onPress = {() => {
-            currentNum = this.state.IsNumber;
-            this.setState({"IsNumber": !currentNum});
-          }
-        }
-        title = "Number"
-      />
-
 
 
 
