@@ -35,8 +35,9 @@ export default class RootNavigator extends React.Component {
 		"</h1>",
 		"</Text>"
 	    ],
+	    currentCode: "<Text>",
 	    currentLine: 1
-	}
+	};
     }
     
   componentDidMount() {
@@ -50,16 +51,33 @@ export default class RootNavigator extends React.Component {
     render() {
 	var events = new Subject();
 	events.subscribe((event) => {
-	    switch(event){
+	    var newNumber;
+	    switch(event.action){
 		case "key_arrow_up":
-		    this.setState({currentLine: this.state.currentLine - 1});
+		    newNumber = this.state.currentLine == 1 ? 1 : this.state.currentLine - 1;
 		    break;
 		case "key_arrow_down":
-		    this.setState({currentLine: this.state.currentLine + 1});
+		    newNumber = this.state.currentLine == this.state.code.length + 1 ? this.state.code.length + 1 : this.state.currentLine + 1;
+		    break;
+		case "change_line":
+		    let code = this.state.code;
+		    code[this.state.currentLine - 1] = event.value;
+		    this.setState({code: code});
 		    break;
 	    }
+	    if(event.action == "key_arrow_up" || event.action == "key_arrow_down"){
+		var newCode = this.state.code[newNumber - 1];
+		this.setState({currentLine: newNumber,
+			       currentCode: newCode
+		});
+	    }
+
 	});
-	return <RootStackNavigator screenProps={{events: events, code: this.state.code, currentLine: this.state.currentLine}} />;
+	return <RootStackNavigator screenProps={{events: events,
+						 code: this.state.code,
+						 currentLine: this.state.currentLine,
+						 currentCode: this.state.currentCode
+	}} />;
     }
     
   _registerForPushNotifications() {

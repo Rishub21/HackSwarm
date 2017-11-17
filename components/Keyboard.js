@@ -233,6 +233,6 @@ const styles  = StyleSheet.create({
   },
 
   textbox : {
-    width : Dimensions.get('window').width / 10
+    width : 0
   }
 });
