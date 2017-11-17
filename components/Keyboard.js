@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, Dimensions, StyleSheet, Text, View , Alert} from 'react-native';
 import {TypeButton} from './TypeButton';
 import {SpaceButton} from './SpaceButton';
+import {DeleteButton} from './DeleteButton';
+
 
 let stringer = "";
 let data = {string: ''};
@@ -24,6 +26,11 @@ export class Keyboard extends React.Component {
     }
     _spaceonPress = (newLetter) => {
       data.string = data.string + newLetter;
+
+	     this.setState(this.state);
+    }
+    _deleteonPress = (newLetter) => {
+      data.string = data.string.slice(0,-1);
 
 	     this.setState(this.state);
     }
@@ -195,6 +202,7 @@ export class Keyboard extends React.Component {
       />
 
       <SpaceButton onPress={this._spaceonPress}/>
+      <DeleteButton onPress={this._deleteonPress}/>
       </View>
 
 
