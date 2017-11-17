@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Dimensions, StyleSheet, Text, View , Alert} from 'react-native';
 import {TypeButton} from './TypeButton';
+import {SpaceButton} from './SpaceButton';
 
 let stringer = "";
 let data = {string: ''};
@@ -17,6 +18,11 @@ export class Keyboard extends React.Component {
     }
 
     _onPress = (newLetter) => {
+      data.string = data.string + newLetter;
+
+	     this.setState(this.state);
+    }
+    _spaceonPress = (newLetter) => {
       data.string = data.string + newLetter;
 
 	     this.setState(this.state);
@@ -183,7 +189,7 @@ export class Keyboard extends React.Component {
 
       {element}
       <Text> {data.string} </Text>
-
+      <View style = {styles.boxrow}>
       <Button
         onPress = {() => {
             currentBool = this.state.IsCaps;
@@ -192,6 +198,9 @@ export class Keyboard extends React.Component {
         }
         title = "CAPS"
       />
+
+      <SpaceButton onPress={this._spaceonPress}/>
+      </View>
 
 
 
