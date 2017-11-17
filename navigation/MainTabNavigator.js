@@ -7,6 +7,7 @@ import Colors from '../constants/Colors';
 
 import HomeScreen from '../screens/HomeScreen';
 import CodeScreen from '../screens/CodeScreen';
+import OutputScreen from '../screens/OutputScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
@@ -14,6 +15,9 @@ export default TabNavigator(
     {
 	Code: {
 	    screen: CodeScreen,
+	},
+	Output: {
+	    screen: OutputScreen,
 	},
 	Home: {
 	    screen: HomeScreen,

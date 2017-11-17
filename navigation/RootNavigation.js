@@ -5,6 +5,10 @@ import { StackNavigator } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
+import * as Rx from "rxjs/Rx";
+
+import {Subject} from "rxjs/Subject";
+
 const RootStackNavigator = StackNavigator(
   {
     Main: {
@@ -29,10 +33,13 @@ export default class RootNavigator extends React.Component {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
 
-  render() {
-    return <RootStackNavigator />;
-  }
+    render() {
+	events = new Subject();
+	events.next('key_down');
 
+	return <RootStackNavigator screenProps={{events: events}} />;
+    }
+    
   _registerForPushNotifications() {
     // Send our push token over to our backend so we can receive notifications
     // You can comment the following line out if you want to stop receiving
