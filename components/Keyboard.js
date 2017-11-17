@@ -181,9 +181,9 @@ export class Keyboard extends React.Component {
 
     <View>
 
+    <Text> {data.string} </Text>
 
       {element}
-      <Text> {data.string} </Text>
       <View style = {styles.boxrow}>
       <Button
         onPress = {() => {
