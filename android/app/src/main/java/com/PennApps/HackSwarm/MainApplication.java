@@ -3,12 +3,14 @@ package com.PennApps.HackSwarm;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactPackage;
+import com.facebook.react.shell.MainReactPackage;
 
 import java.util.Arrays;
 import java.util.List;
 
 // Needed for `react-native link`
-// import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactApplication;
+import com.rctunderdark.NetworkManagerPackage;
 
 public class MainApplication extends MultiDexApplication {
 
@@ -19,7 +21,8 @@ public class MainApplication extends MultiDexApplication {
         // TODO: add cool native modules
 
         // Needed for `react-native link`
-        // new MainReactPackage()
+        new MainReactPackage(),
+        new NetworkManagerPackage()
     );
   }
 }
